@@ -74,8 +74,8 @@ def Main():
         screen_DisplayAccl(myscreen, int(col2) + 4, x, y, z) # Refresh the canvas 
         # read hmc5883l data 
         (x, y, z) = adxtest_gyro85.GetMAgValue()
-        heading = adxtest_gyro85.hmc5883l.getHeadingString() # Get the pointing Angle 
-        declination = adxtest_gyro85.hmc5883l.getDeclinationString() # Obtain the compensation information of magnetic declination Angle 
+        heading = test_gyro85.hmc5883l.getHeadingString() # Get the pointing Angle 
+        declination = test_gyro85.hmc5883l.getDeclinationString() # Obtain the compensation information of magnetic declination Angle 
         screen_DisplayMag(myscreen, int(col3) + 13, heading, declination, x, y, z) # Refresh the canvas 
         myscreen.refresh() # Application of the canvas 
         sleep(0.1) # suspended 0.1 seconds 
