@@ -65,10 +65,10 @@ def Main():
     #  Initialization 
     while True:
         GyroValue = test_gyro85.GetGyroValue()
-        if GyroValue[5]:
-             temp = GyroValue[0]
-             (x, y, z) = (GyroValue[1],GyroValue[2],GyroValue[3]) 
-             displayITG3205(myscreen, 6, temp, x, y, z) # Refresh the canvas 
+        if GyroValue[3]:
+             #temp = GyroValue[0]
+             (x, y, z) = (GyroValue[0],GyroValue[1],GyroValue[2]) 
+             displayITG3205(myscreen, 6, 0, x, y, z) # Refresh the canvas 
         # read adxl345 data 
         (x, y, z) = adxtest_gyro85.GetAcclValue()
         displayADXL345(myscreen, int(col2) + 4, x, y, z) # Refresh the canvas 
