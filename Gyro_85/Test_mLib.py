@@ -83,5 +83,5 @@ def Main():
 if __name__ == "__main__":
     try:
         Main()
-    except Exception:
-        pass
+    except Exception as e:
+        print(str(e))
