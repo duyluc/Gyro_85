@@ -22,7 +22,7 @@ class Gy85:
     def GetGyroValue(self):
         (itgready,dataready) = self.itg3205.getInterruptStatus()
 
-        return (self.itg3205.getDegPerSecAxes()[0],self.itg3205.getDegPerSecAxes()[1],self.itg3205.getDegPerSecAxes()[2],dataready);
+        return (self.itg3205.getAxes()[0],self.itg3205.getAxes()[1],self.itg3205.getAxes()[2],dataready);
     
 
     def GetMagValue(self,degree = 9,min = 54):

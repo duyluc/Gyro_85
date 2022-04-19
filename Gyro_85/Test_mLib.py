@@ -4,19 +4,21 @@ import Gyro_85
 import Gy85
 import time
 import curses
+from timeit import default_timer as timer
+import math
 
 test_gyro85 = Gy85.Gy85(1,0x53,0x68,0x1e)
 
 def screen_DisplayGyro(screen,col,x,y,z):
     #screen.addstr(1,col,"%.1f do"%temp)
-    screen.addstr(2,col,"%.1f do"%x)
-    screen.addstr(3,col,"%.1f do"%y)
-    screen.addstr(4,col,"%.1f do"%z)
+    screen.addstr(2,col,"%.1f "%x)
+    screen.addstr(3,col,"%.1f "%y)
+    screen.addstr(4,col,"%.1f "%z)
 
 def screen_DisplayAccl(screen,col,x,y,z):
-    screen.addstr(1,col,"%.2f do"%x)
-    screen.addstr(2,col,"%.2f do"%y)
-    screen.addstr(3,col,"%.2f do"%z)
+    screen.addstr(1,col,"%.2f "%x)
+    screen.addstr(2,col,"%.2f "%y)
+    screen.addstr(3,col,"%.2f "%z)
     
 def screen_DisplayMag(screen, col, heading, declination,x,y,z):
     #screen.addstr(1,col,heading+" ")
@@ -62,27 +64,95 @@ def Main():
     myscreen.addstr(3, int(col3) + 1, "X:          ", curses.color_pair(2))
     myscreen.addstr(4, int(col3) + 1, "Y:          ", curses.color_pair(2))
     myscreen.addstr(5, int(col3) + 1, "z:          ", curses.color_pair(2))
-    #  Initialization 
-    initialX = 0;
-    initialY = 0;
-    initialZ = 0;
+    #  Initialization
+    #----------------------------------------------------------
+    accoffsetX = 0
+    accoffsetY = 0
+    accoffsetZ = 0
+
+    magoffsetX = 0
+    magoffsetY = 0
+    magoffsetZ = 0
+
+    gyrooffsetX = 0
+    gyrooffsetY = 0
+    gyrooffsetZ = 0
+
+    anglegx = 0
+    anglegy = 0
+    anglegz = 0
+
+    for i in range(0,200):
+        (x,y,z) = test_gyro85.GetAcclValue()
+        if i == 0:
+            accoffsetX = x
+            accoffsetY = y
+            accoffsetZ = z
+        else:
+            accoffsetX = (x+accoffsetX)/2
+            accoffsetY = (y+accoffsetY)/2
+            accoffsetZ = (z+accoffsetZ)/2
+        
+    for i in range(0,200):
+        (x,y,z) = test_gyro85.GetGyroValue()
+        if i == 0:
+            gyrooffsetX = x
+            gyrooffsetY = y
+            gyrooffsetZ = z
+        else:
+            gyrooffsetX = (x+gyrooffsetX)/2
+            gyrooffsetY = (y+gyrooffsetY)/2
+            gyrooffsetZ = (z+gyrooffsetZ)/2
+
+    time.sleep(0.5)
 
     while True:
-        GyroValue = test_gyro85.GetGyroValue()
-        if GyroValue[3]:
-             (x, y, z) = (GyroValue[0],GyroValue[1],GyroValue[2]) 
-             initialX += x*0.1;
-             initialY += y*0.1;
-             initialZ += z*0.1;
-             screen_DisplayGyro(myscreen, 6, x, y, z) # Refresh the canvas 
-        # read adxl345 data 
-        (x, y, z) = test_gyro85.GetAcclValue()
-        screen_DisplayAccl(myscreen, int(col2) + 4, x, y, z) # Refresh the canvas 
-        # read hmc5883l data 
-        (x, y, z) = test_gyro85.GetMagValue()
-        heading = test_gyro85.hmc5883l.getHeadingString() # Get the pointing Angle 
-        declination = test_gyro85.hmc5883l.getDeclinationString() # Obtain the compensation information of magnetic declination Angle 
-        screen_DisplayMag(myscreen, int(col3) + 13, heading, declination, x, y, z) # Refresh the canvas 
+        pretime = timer()
+        (x,y,z) = test_gyro85.GetAcclValue()
+        rawx = x - accoffsetX
+        rawy = y - accoffsetY
+        rawz = z - (255-accoffsetZ)
+
+        X = rawx/256.00
+        Y = rawy/256.00
+        Z = rawz/256.00
+        
+        rollrad = math.atan(Y/math.sqrt(X*X+Z*Z))
+        pitchrad = math.atan(X/mat.sqrt(Y*Y+Z*Z))
+        rolldeg = 180*(math.atan(Y/math.sqrt(X*X+Z*Z)))/math.pi
+        pitchdeg = 180*(math.atan(X/math.sqrt(Y*Y+Z*Z)))/math.pi
+
+        screen_DisplayAccl(myscreen, int(col2) + 4, X, Y, Z)
+
+        (x,y,z) = test_gyro85.GetGyroValue()
+        dtime = timer() - pretime
+        gx_rate = (x - gyrooffsetX)
+        gy_rate = (y - gyrooffsetY)
+        gz_rate = (z - gyrooffsetZ)
+        time.sleep(0.1)
+
+        anglegx = anglegx + (gx_rate * dtime)
+        anglegy = anglegy + (gy_rate * dtime)
+        anglegz = anglegz + (gz_rate * dtime)
+
+        screen_DisplayGyro(myscreen, 6, anglegx, anglegy, anglegz)
+        #----------------------------------------------------------
+        #GyroValue = test_gyro85.GetGyroValue()
+        #if GyroValue[3]:
+        #     (x, y, z) = (GyroValue[0],GyroValue[1],GyroValue[2]) 
+        #     initialX += x*0.1;
+        #     initialY += y*0.1;
+        #     initialZ += z*0.1;
+        #     screen_DisplayGyro(myscreen, 6, x, y, z) # Refresh the canvas 
+        ## read adxl345 data 
+        #(x, y, z) = test_gyro85.GetAcclValue()
+        #screen_DisplayAccl(myscreen, int(col2) + 4, x, y, z) # Refresh the canvas 
+        ## read hmc5883l data 
+        #(x, y, z) = test_gyro85.GetMagValue()
+        #heading = test_gyro85.hmc5883l.getHeadingString() # Get the pointing Angle 
+        #declination = test_gyro85.hmc5883l.getDeclinationString() # Obtain the compensation information of magnetic declination Angle 
+        #screen_DisplayMag(myscreen, int(col3) + 13, heading, declination, x, y, z) # Refresh the canvas 
+        #----------------------------------------------------------
         myscreen.refresh() # Application of the canvas 
         time.sleep(0.1) # suspended 0.1 seconds 
 
