@@ -1,7 +1,9 @@
 import sys
-sys.path.insert(1,"./i2clibraries")
+sys.path.insert(0,"/home/tada/L2libraries/Gyro_85/Gyro_85/i2clibraries/")
 from time import *
 from i2c_adxl345 import *
+from i2c_itg3205 import *
+from i2c_hmc5883l import *
 
 class Gy85:
     #Initial Gy85
@@ -18,15 +20,17 @@ class Gy85:
         return self.adxl345.getAxes();
 
     def GetGyroValue(self):
-        return self.itg3205.getAxes();
+        (itgready,dataready) = self.itg3205.getInterruptStatus()
+
+        return (self.itg3205.getAxes()[0],self.itg3205.getAxes()[1],self.itg3205.getAxes()[2],dataready);
+    
 
     def GetMagValue(self,degree = 9,min = 54):
         self.hmc5883l.setContinuousMode()
-        self.setDeclination(degree,min)
+        self.hmc5883l.setDeclination(degree,min)
         return self.hmc5883l.getAxes()
 
 
-    
 
 
 

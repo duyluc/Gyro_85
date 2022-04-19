@@ -177,7 +177,7 @@ class i2c_adxl345:
 		# Figure out g's and then intervals based on 62.5 mg
 		# Range 0-16g
 		intervals = math.floor(math.fabs(g) / 0.0625 )
-		print( intervals);
+		#print( intervals);
 		if intervals < 256:
 			self.setOption(self.ActivityThreshold, intervals)
 			
