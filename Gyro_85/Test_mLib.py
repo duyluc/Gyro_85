@@ -68,15 +68,15 @@ def Main():
         if GyroValue[3]:
              #temp = GyroValue[0]
              (x, y, z) = (GyroValue[0],GyroValue[1],GyroValue[2]) 
-             displayITG3205(myscreen, 6, 0, x, y, z) # Refresh the canvas 
+             screen_DisplayGyro(myscreen, 6, 0, x, y, z) # Refresh the canvas 
         # read adxl345 data 
         (x, y, z) = adxtest_gyro85.GetAcclValue()
-        displayADXL345(myscreen, int(col2) + 4, x, y, z) # Refresh the canvas 
+        screen_DisplayAccl(myscreen, int(col2) + 4, x, y, z) # Refresh the canvas 
         # read hmc5883l data 
         (x, y, z) = adxtest_gyro85.GetMAgValue()
         heading = adxtest_gyro85.hmc5883l.getHeadingString() # Get the pointing Angle 
         declination = adxtest_gyro85.hmc5883l.getDeclinationString() # Obtain the compensation information of magnetic declination Angle 
-        displayHMC5883L(myscreen, int(col3) + 13, heading, declination, x, y, z) # Refresh the canvas 
+        screen_DisplayMag(myscreen, int(col3) + 13, heading, declination, x, y, z) # Refresh the canvas 
         myscreen.refresh() # Application of the canvas 
         sleep(0.1) # suspended 0.1 seconds 
 
