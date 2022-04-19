@@ -70,7 +70,7 @@ def Main():
              (x, y, z) = (GyroValue[0],GyroValue[1],GyroValue[2]) 
              screen_DisplayGyro(myscreen, 6, x, y, z) # Refresh the canvas 
         # read adxl345 data 
-        (x, y, z) = adxtest_gyro85.GetAcclValue()
+        (x, y, z) = test_gyro85.GetAcclValue()
         screen_DisplayAccl(myscreen, int(col2) + 4, x, y, z) # Refresh the canvas 
         # read hmc5883l data 
         (x, y, z) = test_gyro85.GetMAgValue()
