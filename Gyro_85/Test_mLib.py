@@ -78,7 +78,7 @@ def Main():
         declination = test_gyro85.hmc5883l.getDeclinationString() # Obtain the compensation information of magnetic declination Angle 
         screen_DisplayMag(myscreen, int(col3) + 13, heading, declination, x, y, z) # Refresh the canvas 
         myscreen.refresh() # Application of the canvas 
-        sleep(0.1) # suspended 0.1 seconds 
+        time.sleep(0.1) # suspended 0.1 seconds 
 
 if __name__ == "__main__":
     try:
