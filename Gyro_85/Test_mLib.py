@@ -19,8 +19,8 @@ def screen_DisplayAccl(screen,col,x,y,z):
     screen.addstr(3,col,"%.2f do"%z)
     
 def screen_DisplayMag(screen, col, heading, declination,x,y,z):
-    screen.addstr(1,col,heading+" ")
-    screen.addstr(2,col,decliantion+" ")
+    #screen.addstr(1,col,heading+" ")
+    #screen.addstr(2,col,decliantion+" ")
     screen.addstr(3,col,"%.2f  " %x)
     screen.addstr(4,col,"%.2f  " %y)
     screen.addstr(5,col,"%.2f  " %z)
