@@ -8,7 +8,7 @@ import curses
 test_gyro85 = Gy85.Gy85(1,0x53,0x68,0x1e)
 
 def screen_DisplayGyro(screen,col,x,y,z):
-    screen.addstr(1,col,"%.1f do"%temp)
+    #screen.addstr(1,col,"%.1f do"%temp)
     screen.addstr(2,col,"%.1f do"%x)
     screen.addstr(3,col,"%.1f do"%y)
     screen.addstr(4,col,"%.1f do"%z)
@@ -68,7 +68,7 @@ def Main():
         if GyroValue[3]:
              #temp = GyroValue[0]
              (x, y, z) = (GyroValue[0],GyroValue[1],GyroValue[2]) 
-             screen_DisplayGyro(myscreen, 6, 0, x, y, z) # Refresh the canvas 
+             screen_DisplayGyro(myscreen, 6, x, y, z) # Refresh the canvas 
         # read adxl345 data 
         (x, y, z) = adxtest_gyro85.GetAcclValue()
         screen_DisplayAccl(myscreen, int(col2) + 4, x, y, z) # Refresh the canvas 
